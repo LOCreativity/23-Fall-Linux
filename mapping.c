@@ -33,6 +33,28 @@ int main(int argc, char *argv[]){
 		perror("mmap");
 		exit(1);
 	}
+	
+	int pid;
+        switch(pid = fork()){
+                case 0: /* child process */
+                        printf("1. Child Process : addr = %s", (char*)addr);
+                        sleep(1);
+                        ((char*)addr)[0] = 'x';
+                        printf("2. Child Process : addr = %s", (char*)addr);
+                        sleep(2);
+                        printf("3. Child Process : addr = %s", (char*)addr);
+                        exit(0);
+
+                default: /* parent process */
+                        printf("1. Parent process : addr = %s", (char*)addr);
+                        sleep(2);
+                        printf("2. Parent process : addr = %s", (char*)addr);
+                        ((char*)addr)[1] = 'y';
+                        printf("3. Parent process : addr = %s", (char*)addr);
+                        wait();
+			break;
+        }
+
 	close(fd);
 
 	printf("%s", (char*)addr);
